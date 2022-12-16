@@ -18,7 +18,6 @@ for i in current_time[1].split(':'):
     chu.append(i)
 
 commit = repo.get_commit(sha=sh)
-# print(commit.commit.author.date)
 commit_time = str(commit.commit.author.date).split(' ')
 shu = []
 for i in commit_time[0].split('-'):
@@ -31,7 +30,15 @@ b = datetime(int(shu[0]), int(shu[1]), int(shu[2]), int(shu[3]), int(shu[4]), in
 
 print(a-b)
 if a-b < timedelta(minutes=5):
-    print(True)
-    os.system('bash script.sh')
+    print("[+] Recent Commit Detected")
+    print("[+] Testing")
+    os.system('bash test_script.sh')
+    if os.path.getsize('test.txt') == 0:
+        print("[+] All Test Cases passed")
+        print("[+] Deploying...")
+        os.system("bash start.sh")
+        print("[+] Deployment Done")
+    else:
+        print("[+] Test Cases Failed")
 else:
-    print("no action required")
+    print("[+] No Recent Commit Detected")

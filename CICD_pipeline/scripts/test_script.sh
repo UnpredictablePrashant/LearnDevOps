@@ -1,1 +1,2 @@
-python -m pytest -rf ../test/ > file.sh
+git pull
+python -m pytest -rf ../test/ | grep "failed" > test.txt

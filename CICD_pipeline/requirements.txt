@@ -2,3 +2,4 @@ flask
 pytest
 pytest-flask
 PyGithub
+pytz
