@@ -66,3 +66,27 @@ Run this built image from the following command which will create a container.
 ```
 docker run -p 5000:5000 -d flask-hello
 ```
+
+The application is running on port `5000` and can be accessed with `127.0.0.1:5000`. However, if you want it to run on port 3000 on your machine then just change the pointing port and your command to run will be `docker run -p 3000:5000 -d flask-hello`.
+
+### Running the flask based application with gunicorn
+
+Add `gunicorn` in your `requirements.txt` file. <br>
+Create a bash file called as `build.sh` and put the command to run the server through gunicorn.
+
+```bash
+#!/bin/sh
+gunicorn app:app -w 2 --threads 2 -b 0.0.0.0:80
+```
+Change the Dockerfile to have the entry point from this `build.sh` file. The `Dockerfile` would look like:
+
+```
+FROM python
+WORKDIR /app
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+COPY . .
+ENTRYPOINT [ "./build.sh" ]
+```
+
+Finally build and run the application with the command specified above.
