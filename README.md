@@ -269,3 +269,77 @@ docker service inspect myflaskservice
 These commands show the current state and configuration of the service and its replicas.
 
 With these steps, Docker Swarm can automatically scale up or down the number of replicas of the service based on the CPU and memory usage of the containers. This can help optimize the performance of the service without requiring manual intervention.
+
+# AWS
+
+## Cloudwatch
+
+### Understanding various Metrices
+
+There are several metrices while understanding we usually get confused about those metrices. So, let's have a detailed understanding about them:
+
+
+1. **StatusCheckFailed_System**:
+   - **Description**: The count of system status checks that have failed.
+   - **Example**: If an EC2 instance's underlying infrastructure experiences hardware issues, this metric will increase.
+   - **Use Case**: 
+     - It helps you detect underlying hardware problems that may affect the availability of your EC2 instances.
+     - For example, you can set up alarms to notify you when the count of failed system status checks exceeds a certain threshold, ensuring that you address hardware-related problems promptly.
+
+2. **DiskReadBytes**:
+   - **Description**: The number of bytes read from all instance store volumes available to an instance.
+   - **Example**: Monitoring this metric can help you understand the I/O workload on your instance's local storage.
+   - **Use Case**: 
+     - Useful for optimizing storage performance and identifying potential bottlenecks.
+     -  For instance, you can use this metric to understand when your application experiences spikes in disk read activity, potentially indicating high demand for reading data from local storage.
+
+3. **CPUUtilization**:
+   - **Description**: The percentage of CPU utilization for an EC2 instance.
+   - **Example**: If CPUUtilization is consistently high (e.g., 90%), it indicates that the instance's CPU is under heavy load.
+   - **Use Case**: 
+     - Helps in scaling instances based on CPU demand, identifying performance issues, or optimizing instance types.
+     - You can set up autoscaling policies to automatically add or remove instances in response to changes in CPU utilization, ensuring your application's performance matches the demand.
+
+4. **NetworkIn**:
+   - **Description**: The number of bytes received on all network interfaces by an EC2 instance.
+   - **Example**: Monitoring NetworkIn can help identify instances with high incoming network traffic.
+   - **Use Case**: 
+     - Useful for detecting potential security issues or optimizing network performance.
+     - Monitoring NetworkIn can help you spot instances that are receiving an unusually high volume of network traffic, which might be indicative of a security breach or an inefficient data transfer process.
+
+5. **StatusCheckFailed_Instance**:
+   - **Description**: The count of instance status checks that have failed.
+   - **Example**: If the EC2 instance's operating system or application is unresponsive, this metric will increase.
+   - **Use Case**: 
+     - It helps detect issues specific to the instance's operating system or application.
+     - This can help you proactively address application issues.
+
+6. **DiskWriteOps**:
+   - **Description**: The number of write operations (IOPS) to all instance store volumes available to an instance.
+   - **Example**: Monitoring this metric can help you understand the write workload on your instance's local storage.
+   - **Use Case**: 
+     - Useful for optimizing storage performance and identifying potential bottlenecks.
+     - You can use this metric to track spikes in write operations, potentially identifying situations where your application is writing a significant amount of data to local storage, which may lead to performance bottlenecks.
+
+7. **NetworkOut**:
+   - **Description**: The number of bytes sent out on all network interfaces by an EC2 instance.
+   - **Example**: Monitoring NetworkOut can help identify instances with high outgoing network traffic.
+   - **Use Case**: 
+     - Useful for detecting potential security issues or optimizing network performance.
+     - Keeping an eye on NetworkOut helps you ensure that instances are not sending an excessive amount of data externally, which can be costly or indicate a problem, such as a data leak.
+
+8. **CPUCreditUsage**:
+   - **Description**: The number of CPU credits consumed by an EC2 instance if it's T2/T3 instance type.
+   - **Example**: T2/T3 instances accumulate CPU credits when they're idle and consume them when under load.
+   - **Use Case**: 
+     - Helps monitor and manage CPU performance for burstable instances.
+     - Monitoring CPUCreditUsage is crucial for T2/T3 instances. When credits are consistently low, it might be time to consider a larger instance type or optimizing your application's CPU usage.
+
+9. **StatusCheckFailed**:
+   - **Description**: The count of all status checks (both system and instance) that have failed.
+   - **Example**: A combination of system and instance status checks can provide an overall health assessment.
+   - **Use Case**: 
+     - Provides a high-level view of instance health, especially when used in conjunction with individual status metrics.
+     - By aggregating both system and instance status checks, this metric offers a holistic view of an instance's health. Setting up alarms on this metric ensures that you are alerted to any issues affecting the instance's overall health.
+
+These metrics are valuable for tracking and troubleshooting the performance and health of your AWS resources. You can set up CloudWatch Alarms to automatically respond to specific metric values, ensuring that you are alerted to potential issues and can take corrective actions promptly. Monitoring these metrics can help you maintain the reliability, performance, and efficiency of your AWS resources and applications.
