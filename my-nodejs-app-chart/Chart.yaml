@@ -1,0 +1,4 @@
+apiVersion: v2
+name: my-nodejs-app-chart
+description: A helm chart for deploying nodejs microservice application
+version: 0.1.0

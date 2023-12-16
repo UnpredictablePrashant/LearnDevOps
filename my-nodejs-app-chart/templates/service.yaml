@@ -1,0 +1,13 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.services.name }}"
+spec:
+  selector:
+    app: {{ .Values.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.services.port }}
+      targetPort: {{ .Values.services.targetPort }}
+  type: LoadBalancer

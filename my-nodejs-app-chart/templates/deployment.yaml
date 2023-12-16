@@ -1,0 +1,29 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+      {{- range .Values.microservices }}
+      - name: {{ .name }}
+        image: "{{ $.Values.image.repository }}/{{ .name }}:{{ $.Values.image.tag }}"
+        resources:
+          limits:
+            memory: {{ $.Values.resources.limits.memory }}
+            cpu: {{ $.Values.resources.limits.cpu }}
+          requests:
+            memory: {{ $.Values.resources.requests.memory }}
+            cpu: {{ $.Values.resources.requests.cpu }}
+        ports:
+          - containerPort: {{ .port }}
+      {{- end }}

@@ -1,0 +1,20 @@
+eksctl create cluster --name node-micro-demo --region us-east-1 --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 2 --nodes-max 2
+
+aws eks --region us-east-1 update-kubeconfig --name node-micro-demo
+
+kubectl apply -f Deployment.yaml
+
+
+To Monitor:
+kubectl get services --watch
+
+
+Clean Up option:
+eksctl delete cluster --name node-micro-demo --region us-east-1
+
+
+aws --region us-east-1 cloudformation delete-stack --stack-name eksctl-node-micro-cluster
+
+
+kubectl get nodes  
+kubectl describe node ip-192-168-26-152.ec2.internal
