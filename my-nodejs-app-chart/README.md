@@ -19,3 +19,9 @@ Checkout for the services:
 ```sh
 kubectl get services --watch
 ```
+
+Listing and uninstalling helm:
+```sh
+helm list
+helm uninstall <chart-name>
+```
