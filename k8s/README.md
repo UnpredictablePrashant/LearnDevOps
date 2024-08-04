@@ -125,10 +125,12 @@ minikube start
 ```
 3. Deploy the k8s file into the cluster
 ```bash
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+kubectl apply -f deployment.yml
+kubectl apply -f service.yml
 ```
 4. Access it through the minikube ip.
 ```bash
-minikube ip
+minikube service flaskapp-service
 ```
+
+And run the service specified in the port.
