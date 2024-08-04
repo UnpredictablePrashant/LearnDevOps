@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    
+    environment {
+        GIT_BRANCH = 'main'
+        GIT_URL = 'https://github.com/UnpredictablePrashant/XYZ.git'
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+
+        stage('Harshith') {
+            steps {
+                script {
+                    sh 'ls'
+                    sh 'pwd'
+                    sh 'date'
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                cleanWs() // Clean workspace before checking out code
+                git branch: env.GIT_BRANCH, url: env.GIT_URL
+            }
+        }
+        
+        stage('connect to EC2') {
+            steps {
+                sshagent(credentials: ['pk']) {
+                    sh '''
+                      ssh -o StrictHostKeyChecking=no ubuntu@34.214.196.190 '
+                        sudo apt update -y
+                        sudo apt install nginx -y
+                      '
+                     '''
+                }
+            }
+        }
+        
+        stage('copy file'){
+            steps {
+                sshagent(credentials: ['pk']){
+                    sh '''
+                    scp -o StrictHostKeyChecking=no -r ${WORKSPACE}/* ubuntu@34.214.196.190:/home/ubuntu/
+                    '''
+                }
+            }
+        }
+        
+        stage('moving files'){
+            steps{
+                sshagent(credentials: ['pk']){
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@34.214.196.190 '
+                        sudo mv index.html /var/www/html
+                      '
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
