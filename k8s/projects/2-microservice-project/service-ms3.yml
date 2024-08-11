@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms3-service
+spec:
+  selector:
+    app: ms3
+  ports:
+    - protocol: TCP
+      port: 3005
+      targetPort: 3002
+  type: ClusterIP

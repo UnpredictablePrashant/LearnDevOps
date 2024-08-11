@@ -134,3 +134,53 @@ minikube service flaskapp-service
 ```
 
 And run the service specified in the port.
+
+## Path Based Routing for Microservices in K8s
+1. Build all the microservices from the project and push it into the dockerhub / ecr.<br>
+`https://github.com/UnpredictablePrashant/MicroserviceNodeJs`<br>
+Alternatively, you can fetch it from `https://hub.docker.com/r/prashantdey/microservicenode/tags`
+
+2. Write the `deployment.yml` file for each microservices and similarly do it for the `service.yml`. Finally, write the `ingress.yml` to create path based routing. Code is already provided.
+
+3. Start minikube and configure the minikube to enable the ingress.
+```bash
+minikube start
+minikube addons enable ingress
+minikube addons enable ingress-dns
+```
+
+4. My port 80 is already being used by other services, so I configured my ingress to use 3005 to use for the HTTP traffic.
+```bash
+kubectl edit svc nginx-ingress-ingress-nginx-controller -n kube-system
+```
+
+Change the port to 3005, then save the file and close the file:
+```yml
+spec:
+  ports:
+  - name: http
+    port: 3005
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+```
+
+5. Apply all the k8s file.
+
+```bash
+kubectl apply -f deployment-ms1.yml
+kubectl apply -f deployment-ms2.yml
+kubectl apply -f deployment-ms3.yml
+kubectl apply -f service-ms1.yml
+kubectl apply -f service-ms2.yml
+kubectl apply -f service-ms3.yml
+kubectl apply -f ingress.yml
+```
+
+6. Inorder to access content from minikube cluster over localhost, we need to create tunnel.
+```bash
+minikube tunnel
+```
+
+You can access the website by running it at `http://localhost:3005/ms1`

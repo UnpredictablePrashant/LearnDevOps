@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms3-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms3
+  template:
+    metadata:
+      labels:
+        app: ms3
+    spec:
+      containers:
+      - name: ms3
+        image: prashantdey/microservicenode:ms3
+        ports:
+        - containerPort: 3002
