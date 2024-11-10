@@ -1,0 +1,8 @@
+app:
+  name: flaskapp
+  replicaCount: 1
+  image:
+    repository: ravikishans/flaskbatch5
+    tag: latest
+    containerPort: 5000
+  nodePort: 30007

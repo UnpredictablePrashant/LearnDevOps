@@ -184,3 +184,63 @@ minikube tunnel
 ```
 
 You can access the website by running it at `http://localhost:3005/ms1`
+
+
+## Travel Memory Deployment using K8s on EKS
+
+1. Setting up Namespaces:
+  Namespaces are used to isolate different environments or components within your Kubernetes cluster.
+```bash
+kubectl apply -f namespaces.yml
+```
+
+2. Create the MongoDB Deployment and Service: 
+  We’ll set up MongoDB in the database namespace using a PersistentVolumeClaim to store data.
+```bash
+kubectl apply -f pv.yml
+kubectl apply -f pvc.yml
+kubectl apply -f mongodb-deployment.yml
+kubectl apply -f mongodb-service.yml
+```
+
+Here if you want to connect with the Mongodb and create a database:
+
+```bash
+kubectl port-forward svc/mongodb-service 27018:27017 -n database
+```
+
+Now you can connect from mongo compass from the address `mongodb://localhost:27018/`
+
+3. Creating secrets for Backend Configuration
+Kubernetes Secrets store sensitive information such as database URIs securely. You will have to make the base64 encoding for the secrets which is provided in the secret.yml file and then put it inside the file.
+
+
+```bash
+kubectl apply -f secret.yml
+kubectl apply -f backend-deployment.yml
+kubectl apply -f backend-service.yml
+```
+
+Verify if everything is backend is working or not (check out the notes section to understand how to debug the lookup from the cluster):
+
+```bash
+kubectl port-forward svc/backend-service 3001:3001 -n backend
+```
+
+
+### Notes
+
+Command to run busybox image inside the cluster and perform nslookup from there:
+
+```bash
+kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
+```
+
+Inside the shell you can check if the service is up or not. For example, if you want to check for the mongodb.
+```bash
+nslookup mongodb-service.database.svc.cluster.local
+```
+
+```bash
+kubectl port-forward svc/frontend-service 3000:3000 -n frontend
+```
