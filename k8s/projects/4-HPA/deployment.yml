@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tmbe-deployment
+  labels:
+    app: tmbe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tmbe
+  template:
+    metadata:
+      labels:
+        app: tmbe
+    spec:
+      containers:
+      - name: tmbe
+        image: prashantdey/travelmemory:be
+        ports:
+        - containerPort: 3001
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
